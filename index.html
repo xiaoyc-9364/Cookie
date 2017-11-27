@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Cookie</title>
+</head>
+<body>
+	<h1>cookie值的设置与获取</h1>
+	
+	<script>
+		var Cookie = {
+			get: function (name) {
+				var cookieName = encodeURIComponent(name) + '=',	
+					indexStart = document.cookie.indexOf(cookieName),	//获得cookieName在document.cookie中开始出现的位置
+					cookieValue = null;
+				if (indexStart > -1) {	//判断cookieName是否存在
+					var indexEnd = document.cookie.indexOf(';', indexStart);	//从cookieName出现的位置开始查找";"
+					if (indexEnd == -1) { //判断';'是否存在，不存在则说明该cookieName在document.cookie的最后一个
+						indexEnd = document.cookie.length;
+					}
+					//截取出cookieName对应的value
+					cookieValue = decodeURIComponent(document.cookie.substring(indexStart + cookieName.length, indexEnd));
+				} 
+				return cookieValue;
+			},
+
+			set: function (name, value, expires, path, domain, secure) {//参数类型：名称、值、保存天数、路径、域、安全标志
+				var cookieText = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+
+				if (expires) {
+					var date =  new Date();		//当前时间
+					date.setTime(date.getTime() + expires * 24 * 3600 * 1000);	//设置时间为当前时间的后expires的天数
+					cookieText += "; expires=" + date.toGMTString();
+				}
+
+				if (path) {		
+					cookieText += "; path=" + path;
+				}
+
+				if(domain) {
+					cookieText +="; domain=" + domain;
+				}
+
+				if(secure) {
+					cookieText += "; secure";
+				}
+
+				document.cookie = cookieText;  //无法赋值？？？？
+				debugger;
+			}
+
+		};
+		// Cookie.set('name', 'Nicholas');
+		Cookie.set('book', 'JavaSctipt', 10);
+		
+		console.log(Cookie.get('book'));
+		
+	</script>
+</body>
+</html>
